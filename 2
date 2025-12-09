@@ -1,0 +1,23 @@
+import marimo as mo
+import joblib
+import numpy as np
+
+model = joblib.load("exam_model.pkl")
+
+study_hours = mo.ui.number(label="Study hours", value=50.0)
+attendance = mo.ui.number(label="Class attendance (%)", value=40.0)
+sleep_hours = mo.ui.number(label="Sleep hours", value=10.0)
+
+inputs = mo.vstack([study_hours, attendance, sleep_hours])
+
+def predict():
+    x = np.array([[study_hours.value, attendance.value, sleep_hours.value]])
+    return float(model.predict(x)[0])
+
+result = mo.ui.text(predict)
+
+mo.vstack([
+    mo.md("# Exam Score Predictor"),
+    inputs,
+    mo.md("### Predicted Score"),
+    result
